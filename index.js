@@ -5,13 +5,13 @@ require('dotenv').config();
 
 
 const app=express();
-const port =process.env.port || 5000;
+const port =process.env.port || 5003;
 
 
 // ArtsWebsite
 // ujBgG2eLFp4eQmIp
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 
 // middleware
@@ -32,16 +32,48 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    // consyt artsCollection =client.db('art')
+    const artsCollection =client.db('artsDB').collection('paintings')
     await client.connect();
+   
+
+    app.get('/addpaintings', async(req,res) =>{
+      const cursor =artsCollection.find();
+      const result=await cursor.toArray();
+      res.send(result)
+    })
+
+    app.get("/addpaintings/:email", async(req,res)=>{
+      console.log(req.params.email);
+      const result= await  artsCollection.find({email:req.params.email}).toArray();
+      res.send(result);
+    })
+
+    app.get("/allPaintings/:id", async(req,res)=>{
+      console.log(req.params.id);
+      const result = await artsCollection.findOne({_id:
+     new ObjectId(req.params.id) ,
+    })
+     console.log(result);
+      res.send(result)
+    })
+    app.get("/myArts/:id", async(req,res)=>{
+      console.log(req.params.id);
+      const result = await artsCollection.findOne({_id:
+     new ObjectId(req.params.id) ,
+    })
+     console.log(result);
+      res.send(result)
+    })
 
 
     app.post('/addpaintings', async(req,res) =>{
       const newPaintings =req.body;
       console.log(newPaintings);
+      const result = await artsCollection.insertOne(newPaintings);
+      res.send(result);
     })
 
-    
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");

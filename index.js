@@ -91,6 +91,12 @@ async function run() {
       console.log(result);
     })
 
+    app.delete("/delete/:id", async(req,res) =>{
+      const result = await artsCollection.deleteOne({_id:new ObjectId(req.params.id)})
+      console.log(result);
+      res.send(result)
+    })
+
 
     app.post('/addpaintings', async(req,res) =>{
       const newPaintings =req.body;

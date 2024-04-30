@@ -56,6 +56,8 @@ async function run() {
      console.log(result);
       res.send(result)
     })
+
+
     app.get("/myArts/:id", async(req,res)=>{
       console.log(req.params.id);
       const result = await artsCollection.findOne({_id:
@@ -63,6 +65,30 @@ async function run() {
     })
      console.log(result);
       res.send(result)
+    })
+
+    app.put("/myArts/:id" ,async(req,res)=>{
+      console.log(req.params.id)
+      const id = req.params.id;
+      const filter ={_id: new ObjectId(id)}
+
+     const data=req.body;
+      const fulldata ={
+        $set:{
+          paintingname:data.paintingname,
+          SubcategoryName:data.SubcategoryName,
+          price:data.price,
+          Rating:data.Rating,
+          Customization:data.Customization,
+          ProcessingTime:data.ProcessingTime,
+          photo:data.photo,
+          ShortDescription:data.ShortDescription
+        }
+      }
+      const result = await artsCollection.updateOne(filter,fulldata);
+      
+      res.send(result);
+      console.log(result);
     })
 
 

@@ -71,7 +71,7 @@ async function run() {
      console.log(result);
       res.send(result)
     })
-
+  
 
     app.get("/myArts/:id", async(req,res)=>{
       console.log(req.params.id);
